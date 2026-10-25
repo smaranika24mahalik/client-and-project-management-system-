@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { FolderPlus, Search, Pencil, Trash2, DollarSign, Calendar, Filter } from 'lucide-react'
+import { FolderPlus, Search, Pencil, Trash2 } from 'lucide-react'
 import { fetchProjects, fetchClients, createProject, updateProject, deleteProject, updateProjectStatus, assignProject } from '../lib/api'
 import type { Client, ProjectWithClient, ProjectType, ProjectStatus } from '../lib/types'
 import { PROJECT_TYPES, PROJECT_STATUSES, STATUS_COLORS, STATUS_DOT_COLORS } from '../lib/types'

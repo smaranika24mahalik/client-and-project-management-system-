@@ -5,7 +5,7 @@ import {
 } from 'recharts'
 import { Users, FolderKanban, DollarSign, TrendingUp } from 'lucide-react'
 import { fetchClients, fetchProjects, fetchReportData } from '../lib/api'
-import type { Client, ProjectWithClient, ReportData } from '../lib/types'
+import type { ReportData } from '../lib/api'
 import { STATUS_COLORS } from '../lib/types'
 import { LoadingState, ErrorState, Card, Badge, EmptyState } from '../components/ui'
 
@@ -17,8 +17,6 @@ const PIE_COLORS: Record<string, string> = {
 }
 
 export default function Reports() {
-  const [clients, setClients] = useState<Client[]>([])
-  const [projects, setProjects] = useState<ProjectWithClient[]>([])
   const [report, setReport] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -28,8 +26,6 @@ export default function Reports() {
     setError('')
     try {
       const [c, p] = await Promise.all([fetchClients(), fetchProjects()])
-      setClients(c)
-      setProjects(p)
       setReport(await fetchReportData(c, p))
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load reports')
@@ -76,13 +72,13 @@ export default function Reports() {
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card className="p-6">
           <h3 className="mb-4 text-sm font-bold text-slate-700">Project Status Distribution</h3>
-          {chartData.every(d => d.count === 0) ? (
+          {chartData.every((d: { status: string; count: number }) => d.count === 0) ? (
             <EmptyState title="No data" message="Add projects to see status distribution." />
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie data={chartData} dataKey="count" nameKey="status" cx="50%" cy="50%" outerRadius={90} label>
-                  {chartData.map((entry) => (
+                  {chartData.map((entry: { status: string; count: number }) => (
                     <Cell key={entry.status} fill={PIE_COLORS[entry.status] ?? '#cbd5e1'} />
                   ))}
                 </Pie>
@@ -95,11 +91,11 @@ export default function Reports() {
 
         <Card className="p-6">
           <h3 className="mb-4 text-sm font-bold text-slate-700">Client-wise Project Count</h3>
-          {report && report.clientSummaries.every(cs => cs.projectCount === 0) ? (
+          {report && report.clientSummaries.every((cs: ReportData['clientSummaries'][number]) => cs.projectCount === 0) ? (
             <EmptyState title="No data" message="Assign projects to clients to see this chart." />
           ) : (
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={report?.clientSummaries.map(cs => ({ name: cs.client.full_name, projects: cs.projectCount, budget: cs.totalBudget })) ?? []}>
+              <BarChart data={report?.clientSummaries.map((cs: ReportData['clientSummaries'][number]) => ({ name: cs.client.full_name, projects: cs.projectCount, budget: cs.totalBudget })) ?? []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} angle={-20} textAnchor="end" height={60} />
                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} allowDecimals={false} />
@@ -154,8 +150,8 @@ export default function Reports() {
                 <tr className="border-t-2 border-slate-200 bg-slate-50 font-bold">
                   <td className="px-6 py-3 text-slate-700">Total</td>
                   <td className="px-6 py-3 text-center text-slate-700">{report?.totalProjects ?? 0}</td>
-                  <td className="px-6 py-3 text-center text-slate-700">{report?.clientSummaries.reduce((s, c) => s + c.inProgress, 0) ?? 0}</td>
-                  <td className="px-6 py-3 text-center text-slate-700">{report?.clientSummaries.reduce((s, c) => s + c.completed, 0) ?? 0}</td>
+                  <td className="px-6 py-3 text-center text-slate-700">{report?.clientSummaries.reduce((s: number, c: ReportData['clientSummaries'][number]) => s + c.inProgress, 0) ?? 0}</td>
+                  <td className="px-6 py-3 text-center text-slate-700">{report?.clientSummaries.reduce((s: number, c: ReportData['clientSummaries'][number]) => s + c.completed, 0) ?? 0}</td>
                   <td className="px-6 py-3 text-right text-slate-700">${report?.totalBudget.toLocaleString() ?? 0}</td>
                 </tr>
               </tfoot>

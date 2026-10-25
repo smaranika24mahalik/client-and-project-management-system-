@@ -6,7 +6,8 @@ import {
 } from 'recharts'
 import { Users, FolderKanban, Clock, CheckCircle, CalendarClock, DollarSign, ArrowRight } from 'lucide-react'
 import { fetchClients, fetchProjects, fetchReportData } from '../lib/api'
-import type { Client, ProjectWithClient, ReportData } from '../lib/types'
+import type { ReportData } from '../lib/api'
+import type { ProjectWithClient } from '../lib/types'
 import { STATUS_COLORS, STATUS_DOT_COLORS } from '../lib/types'
 import { LoadingState, ErrorState, Card, Badge, EmptyState } from '../components/ui'
 
@@ -18,7 +19,6 @@ const PIE_COLORS: Record<string, string> = {
 }
 
 export default function Dashboard() {
-  const [clients, setClients] = useState<Client[]>([])
   const [projects, setProjects] = useState<ProjectWithClient[]>([])
   const [report, setReport] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -29,7 +29,6 @@ export default function Dashboard() {
     setError('')
     try {
       const [c, p] = await Promise.all([fetchClients(), fetchProjects()])
-      setClients(c)
       setProjects(p)
       setReport(await fetchReportData(c, p))
     } catch (e) {
@@ -90,13 +89,13 @@ export default function Dashboard() {
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card className="p-6">
           <h3 className="mb-4 text-sm font-bold text-slate-700">Project Status Breakdown</h3>
-          {chartData.every(d => d.count === 0) ? (
+          {chartData.every((d: { status: string; count: number }) => d.count === 0) ? (
             <EmptyState title="No projects yet" message="Project status will appear here once you add projects." />
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie data={chartData} dataKey="count" nameKey="status" cx="50%" cy="50%" outerRadius={80} innerRadius={40}>
-                  {chartData.map((entry) => (
+                  {chartData.map((entry: { status: string; count: number }) => (
                     <Cell key={entry.status} fill={PIE_COLORS[entry.status] ?? '#cbd5e1'} />
                   ))}
                 </Pie>
@@ -109,7 +108,7 @@ export default function Dashboard() {
 
         <Card className="p-6">
           <h3 className="mb-4 text-sm font-bold text-slate-700">Projects by Type</h3>
-          {typeData.every(d => d.count === 0) ? (
+          {typeData.every((d: { type: string; count: number }) => d.count === 0) ? (
             <EmptyState title="No projects yet" message="Project type data will appear here." />
           ) : (
             <ResponsiveContainer width="100%" height={250}>
