@@ -233,7 +233,7 @@ export default function Clients() {
                   {viewClient.projects.map((p) => (
                     <Link
                       key={p.id}
-                      to="/projects"
+                      to="/app/projects"
                       onClick={() => setViewClient(null)}
                       className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50 transition-colors"
                     >

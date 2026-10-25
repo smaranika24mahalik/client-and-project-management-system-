@@ -1,13 +1,13 @@
-import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Users, FolderKanban, BarChart3, Settings, Briefcase } from 'lucide-react'
+import { NavLink, Link } from 'react-router-dom'
+import { LayoutDashboard, Users, FolderKanban, BarChart3, Settings, Briefcase, ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/clients', label: 'Clients', icon: Users },
-  { to: '/projects', label: 'Projects', icon: FolderKanban },
-  { to: '/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/app/clients', label: 'Clients', icon: Users },
+  { to: '/app/projects', label: 'Projects', icon: FolderKanban },
+  { to: '/app/reports', label: 'Reports', icon: BarChart3 },
+  { to: '/app/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -22,15 +22,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }`}
       >
         <div className="flex h-full flex-col bg-[#1e3a5f] text-white">
-          <div className="flex h-16 items-center gap-3 px-6 border-b border-white/10">
+          <Link to="/" className="flex h-16 items-center gap-3 px-6 border-b border-white/10 hover:bg-white/5 transition-colors">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
               <Briefcase className="h-5 w-5" />
             </div>
             <div>
               <h1 className="text-sm font-bold leading-tight">Smart CPMS</h1>
-              <p className="text-[10px] text-white/60">Client & Project Mgmt</p>
+              <p className="text-[10px] text-white/60">Management Console</p>
             </div>
-          </div>
+          </Link>
           <nav className="flex-1 px-3 py-4 space-y-1">
             {navItems.map((item) => (
               <NavLink
@@ -51,9 +51,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </NavLink>
             ))}
           </nav>
-          <div className="px-6 py-4 border-t border-white/10">
-            <p className="text-[10px] text-white/40">BTech CSE OOP Project</p>
-            <p className="text-[10px] text-white/40">Supabase + React</p>
+          <div className="px-3 py-4 border-t border-white/10">
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium text-white/60 hover:bg-white/10 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to website
+            </Link>
           </div>
         </div>
       </aside>

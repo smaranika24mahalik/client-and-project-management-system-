@@ -129,7 +129,7 @@ export default function Dashboard() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-700">Recent Projects</h3>
-            <Link to="/projects" className="flex items-center gap-1 text-xs font-medium text-[#1e3a5f] hover:underline">
+            <Link to="/app/projects" className="flex items-center gap-1 text-xs font-medium text-[#1e3a5f] hover:underline">
               View All <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
@@ -154,7 +154,7 @@ export default function Dashboard() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-700">Upcoming Deadlines</h3>
-            <Link to="/projects" className="flex items-center gap-1 text-xs font-medium text-[#1e3a5f] hover:underline">
+            <Link to="/app/projects" className="flex items-center gap-1 text-xs font-medium text-[#1e3a5f] hover:underline">
               View All <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
